@@ -1,24 +1,6 @@
-import math
 import random
 import matplotlib.pyplot as plt
 import numpy as np
-
-def estimate_sum(stream):
-    c = 0
-    S = 0
-    exact_sum = 0
-    for ai in stream:
-        exact_sum+=ai
-        ri = random.uniform(0, 1)
-        if ri < 1 / ai:
-            S += (ai)
-            c += 1
-            
-    approx_sum = S / c if c != 0 else 0
-    
-    approx_sum = 2**approx_sum
-    return approx_sum , exact_sum
-
 
 def morris(stream):
     approx_count = 0
@@ -44,24 +26,7 @@ def plot_relative_errors(errors, title = "Morris"):
     ax.set_title(f'Relative Errors with Average and Standard Deviation {title}') 
     ax.legend()
     plt.show()
-    ##make it show plot
     
-def randomized_streaming_sum(stream, base=2):
-    
-    X = 0
-    c= 0
-    exact_sum = 0
-    for a in stream:
-        exact_sum+=a
-        if random.random() < 1 / ((base ** X)):
-            X += math.log2(a)
-            c+=1
-
-    approx_sum = (base ** (X))
-
-    return approx_sum, exact_sum
-
-
 def sum_morris(stream, max_val=100):
     """
     Updates counters based on the probability rule and calculates the estimated sum.
@@ -99,8 +64,6 @@ if __name__ == "__main__":
     relative_errors = []
     for i in range(100000):
         stream = [random.randint(1, 100) for _ in range(1_000)]
-        # approx, exact = randomized_streaming_sum(stream, base=base)
-        # approx, exact = estimate_sum(stream)
         approx, exact = morris(stream)
         # approx, exact = sum_morris(stream)
         approx_results.append(approx)
@@ -118,16 +81,3 @@ if __name__ == "__main__":
     print(f"Average Relative Error: {sum(relative_errors) / len(relative_errors):.4f}")
     
     plot_relative_errors(relative_errors)
-    # Plot results
-    # x = range(len(streams))
-    # plt.figure(figsize=(10, 7))
-    
-    # plt.bar(x, exact_results, color='blue', alpha=0.6, label='Exact Sum')
-    # plt.bar(x, approx_results, color='orange', alpha=0.6, label='Approximate Sum', width=0.6)
-    
-    # plt.xticks(x, stream_labels, rotation=45)
-    # plt.ylabel('Sum')
-    # plt.title(f'Comparison of Approximate and Exact Sums of stream of length {1_000_000_00},  the relative error is {relative_errors[0]:.4f}')
-    # plt.legend()
-    # plt.tight_layout()
-    # plt.show()
